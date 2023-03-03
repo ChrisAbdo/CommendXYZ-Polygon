@@ -317,12 +317,6 @@ export default function CreateProfilePage() {
                     <SelectItem value="Project Manager">
                       Project Manager
                     </SelectItem>
-                    <SelectItem value="Business Analyst">
-                      Business Analyst
-                    </SelectItem>
-                    <SelectItem value="Product Designer">
-                      Product Designer
-                    </SelectItem>
                     <SelectItem value="Influencer">Influencer</SelectItem>
                     <SelectItem value="Community Manager">
                       Community Manager

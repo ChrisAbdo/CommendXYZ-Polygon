@@ -60,9 +60,14 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const teams = [
-  { name: "Engineering", href: "#", bgColorClass: "bg-indigo-500" },
-  { name: "Human Resources", href: "#", bgColorClass: "bg-green-500" },
-  { name: "Customer Success", href: "#", bgColorClass: "bg-yellow-500" },
+  { name: "Developer", href: "#", bgColorClass: "bg-indigo-500" },
+  { name: "Designer", href: "#", bgColorClass: "bg-yellow-500" },
+  { name: "Marketer", href: "#", bgColorClass: "bg-pink-500" },
+  { name: "Project Manager", href: "#", bgColorClass: "bg-blue-500" },
+  { name: "Influencer", href: "#", bgColorClass: "bg-green-500" },
+
+  { name: "Community Manager", href: "#", bgColorClass: "bg-red-500" },
+  { name: "Content Creator", href: "#", bgColorClass: "bg-purple-500" },
 ];
 const projects = [
   {
@@ -308,50 +313,64 @@ export default function CommendPage() {
         <div className="mt-5 flex h-0 flex-1 flex-col overflow-y-auto pt-1">
           {/* User account dropdown */}
 
-          {/* Sidebar Search */}
-          <div className="mt-12 px-3">
-            <div>
-              <div className="relative mt-2 flex items-center">
-                {/* <input
-                  type="text"
-                  name="search"
-                  id="search"
-                  placeholder="Search"
-                  className="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                /> */}
-                <Input
-                  onChange={(e) => setQuery(e.target.value)}
-                  className="w-full"
-                  placeholder="Quick Search"
-                />
-                <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-                  <kbd className="inline-flex items-center rounded border border-gray-200 dark:border-[#555] px-1 font-sans text-xs text-gray-400 dark:text-[#777]">
-                    ⌘K
-                  </kbd>
-                </div>
-              </div>
-            </div>
-          </div>
           {/* Navigation */}
           <nav className="mt-6 px-3">
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System</SelectItem>
-              </SelectContent>
-            </Select>
-
             <div className="mt-8">
               {/* Secondary navigation */}
+              <div className="mb-4">
+                {roleQuery && (
+                  <span
+                    className={`inline-flex items-center rounded-full py-0.5 pl-2.5 pr-1 text-sm font-medium ${
+                      roleQuery === "Developer"
+                        ? "bg-indigo-500 text-white"
+                        : roleQuery === "Designer"
+                        ? "bg-yellow-500 text-white"
+                        : roleQuery === "Influencer"
+                        ? "bg-green-500 text-white"
+                        : roleQuery === "Community Manager"
+                        ? "bg-red-500 text-white"
+                        : roleQuery === "Marketer"
+                        ? "bg-pink-500 text-white"
+                        : roleQuery === "Content Creator"
+                        ? "bg-purple-500 text-white"
+                        : roleQuery === "Project Manager"
+                        ? "bg-blue-500 text-white"
+                        : "" /* add an empty string to complete the ternary operator */
+                    }`}
+                  >
+                    {/* roleQuery */}
+                    {roleQuery}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRoleQuery("");
+                        setQuery("");
+                      }}
+                      className="ml-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-black  hover:text-black/80 hover:text-indigo-500 focus:bg-gray-200 focus:text-white focus:outline-none"
+                    >
+                      <span className="sr-only">Remove large option</span>
+                      <svg
+                        className="h-2 w-2"
+                        stroke="currentColor"
+                        fill="none"
+                        viewBox="0 0 8 8"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeWidth="1.5"
+                          d="M1 1l6 6m0-6L1 7"
+                        />
+                      </svg>
+                    </button>
+                  </span>
+                )}
+              </div>
+
               <h3
-                className="px-3 text-sm font-medium text-gray-500"
+                className="px-3 text-sm font-medium text-black dark:text-white"
                 id="desktop-teams-headline"
               >
-                Teams
+                Filter by Role
               </h3>
               <div
                 className="mt-1 space-y-1"
@@ -359,10 +378,13 @@ export default function CommendPage() {
                 aria-labelledby="desktop-teams-headline"
               >
                 {teams.map((team) => (
-                  <a
+                  <div
                     key={team.name}
-                    href={team.href}
-                    className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                    onClick={() => {
+                      setQuery(team.name);
+                      setRoleQuery(team.name);
+                    }}
+                    className="cursor-pointer group flex items-center rounded-md px-3 py-2 text-sm font-medium text-black dark:text-white hover:bg-gray-50 dark:hover:bg-[#333] hover:text-gray-900"
                   >
                     <span
                       className={classNames(
@@ -372,7 +394,7 @@ export default function CommendPage() {
                       aria-hidden="true"
                     />
                     <span className="truncate">{team.name}</span>
-                  </a>
+                  </div>
                 ))}
               </div>
             </div>
@@ -519,6 +541,28 @@ export default function CommendPage() {
           {/* Projects table (small breakpoint and up) */}
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="mt-8 flow-root">
+              <div>
+                <div className="relative mt-2 flex items-center">
+                  {/* <input
+                  type="text"
+                  name="search"
+                  id="search"
+                  placeholder="Search"
+                  className="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                /> */}
+                  <Input
+                    onChange={(e) => setQuery(e.target.value)}
+                    className="w-full"
+                    placeholder="Quick Search"
+                    id="search"
+                  />
+                  <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
+                    <kbd className="inline-flex items-center rounded border border-gray-200 dark:border-[#555] px-1 font-sans text-xs text-gray-400 dark:text-[#777]">
+                      ⌘K
+                    </kbd>
+                  </div>
+                </div>
+              </div>
               <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                   <table className="min-w-full divide-y divide-gray-300 dark:divide-[#777]">
@@ -581,7 +625,33 @@ export default function CommendPage() {
                               </td>
 
                               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
+                                <span
+                                  className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
+                                    // @ts-ignore
+                                    nft.role === "Developer"
+                                      ? "bg-indigo-500 text-white"
+                                      : // @ts-ignore
+                                      nft.role === "Designer"
+                                      ? "bg-yellow-500 text-white"
+                                      : // @ts-ignore
+                                      nft.role === "Influencer"
+                                      ? "bg-green-500 text-white"
+                                      : // @ts-ignore
+                                      nft.role === "Community Manager"
+                                      ? "bg-red-500 text-white"
+                                      : // @ts-ignore
+                                      nft.role === "Marketer"
+                                      ? "bg-pink-500 text-white"
+                                      : // @ts-ignore
+                                      nft.role === "Content Creator"
+                                      ? // @ts-ignore
+                                        "bg-purple-500 text-white"
+                                      : // @ts-ignore
+                                      nft.role === "Project Manager"
+                                      ? "bg-blue-500 text-white"
+                                      : "" /* add an empty string to complete the ternary operator */
+                                  }`}
+                                >
                                   {/* @ts-ignore */}
                                   {nft.role}
                                 </span>
@@ -641,11 +711,8 @@ export default function CommendPage() {
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                       <AlertDialogCancel>
-                                        Cancel
+                                        Close
                                       </AlertDialogCancel>
-                                      <AlertDialogAction>
-                                        Continue
-                                      </AlertDialogAction>
                                     </AlertDialogFooter>
                                   </AlertDialogContent>
                                 </AlertDialog>
@@ -674,7 +741,7 @@ export default function CommendPage() {
                                       </DialogDescription>
                                     </DialogHeader>
                                     <Label htmlFor="email-2">
-                                      Confirm Your Wallet Address
+                                      Wallet Address / Nickname / ENS
                                     </Label>
                                     <Input
                                       type="text"
@@ -719,23 +786,16 @@ export default function CommendPage() {
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.1, delay: index * 0.1 }}
                             >
-                              <td className="w-full max-w-0 whitespace-nowrap px-6 py-3 text-sm font-medium text-gray-900">
-                                <div className="flex items-center space-x-3 lg:pl-2">
-                                  <div className="bg-gray-200 dark:bg-[#333] w-16 h-16 animate-pulse rounded-md"></div>
-                                  <a
-                                    href="#"
-                                    className="truncate hover:text-gray-600"
-                                  >
-                                    <span className="text-black dark:text-white">
-                                      <div className="bg-gray-200 dark:bg-[#333] w-20 h-8 animate-pulse rounded-md"></div>
-                                    </span>
-                                  </a>
+                              <td className="w-full max-w-0 whitespace-nowrap py-3 text-sm font-medium text-gray-900">
+                                <div className="flex items-center space-x-3">
+                                  <div className="bg-gray-200 dark:bg-[#333] w-10 h-10 animate-pulse rounded-md"></div>
+                                  <div className="bg-gray-200 dark:bg-[#333] w-80 h-8 animate-pulse rounded-md"></div>
                                 </div>
                               </td>
                               <td className="px-6 py-3 text-sm font-medium text-gray-500">
                                 <div className="flex items-center space-x-2">
                                   <div className="flex flex-shrink-0 -space-x-1">
-                                    <div className="bg-gray-200 dark:bg-[#333] w-64 h-8 animate-pulse rounded-md"></div>
+                                    <div className="bg-gray-200 dark:bg-[#333] w-20 h-8 animate-pulse rounded-md"></div>
                                   </div>
                                 </div>
                               </td>
@@ -744,8 +804,8 @@ export default function CommendPage() {
                               </td>
                               <td className="whitespace-nowrap px-6 py-3 text-right text-sm font-medium">
                                 <div className="space-x-2 flex">
-                                  <div className="bg-gray-200 dark:bg-[#333] w-20 h-8 animate-pulse rounded-md"></div>
-                                  <div className="bg-gray-200 dark:bg-[#333] w-20 h-8 animate-pulse rounded-md"></div>
+                                  <div className="bg-gray-200 dark:bg-[#333] w-18 h-8 animate-pulse rounded-md"></div>
+                                  <div className="bg-gray-200 dark:bg-[#333] w-18 h-8 animate-pulse rounded-md"></div>
                                 </div>
                               </td>
                             </motion.tr>
