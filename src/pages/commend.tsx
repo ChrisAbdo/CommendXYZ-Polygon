@@ -626,7 +626,13 @@ export default function CommendPage() {
 
                               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                 <span
-                                  className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
+                                  onClick={() => {
+                                    // @ts-ignore
+                                    setQuery(nft.role);
+                                    // @ts-ignore
+                                    setRoleQuery(nft.role);
+                                  }}
+                                  className={`cursor-pointer inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
                                     // @ts-ignore
                                     nft.role === "Developer"
                                       ? "bg-indigo-500 text-white"
@@ -669,7 +675,8 @@ export default function CommendPage() {
                                   <AlertDialogContent>
                                     <AlertDialogHeader>
                                       <AlertDialogTitle>
-                                        Are you sure absolutely sure?
+                                        {/* @ts-ignore */}
+                                        {nft.altName}&apos;s Reviews
                                       </AlertDialogTitle>
                                       <AlertDialogDescription>
                                         <ScrollArea className="h-[400px] rounded-md">
