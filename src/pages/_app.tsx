@@ -12,12 +12,14 @@ const activeChainId = ChainId.Mumbai;
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ThirdwebProvider activeChain={activeChainId}>
-      <ThemeProvider>
-        <Navbar />
-        <Component {...pageProps} />
-        <Toaster />
-      </ThemeProvider>
-    </ThirdwebProvider>
+    <div suppressHydrationWarning>
+      <ThirdwebProvider activeChain={activeChainId}>
+        <ThemeProvider>
+          <Navbar />
+          <Component {...pageProps} />
+          <Toaster />
+        </ThemeProvider>
+      </ThirdwebProvider>
+    </div>
   );
 }

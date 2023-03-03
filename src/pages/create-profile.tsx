@@ -57,7 +57,7 @@ export default function CreateProfilePage() {
   const [addressListed, setAddressListed] = React.useState(false);
   const [fileUrl, setFileUrl] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
-
+  const [imageUrl, setImageUrl] = React.useState(null);
   React.useEffect(() => {
     checkListed();
   }, []);
@@ -77,6 +77,7 @@ export default function CreateProfilePage() {
     // upload image to IPFS
 
     const file = e.target.files[0];
+    setImageUrl(URL.createObjectURL(file));
     try {
       const added = await client.add(file, {
         progress: (prog: any) => console.log(`received: ${prog}`),
@@ -344,8 +345,11 @@ export default function CreateProfilePage() {
                   </svg>
                 </span> */}
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>:&#41;</AvatarFallback>
+                  {imageUrl ? (
+                    <AvatarImage src={imageUrl} />
+                  ) : (
+                    <AvatarFallback>:&#41;</AvatarFallback>
+                  )}
                 </Avatar>
                 {/* <button
                   type="button"

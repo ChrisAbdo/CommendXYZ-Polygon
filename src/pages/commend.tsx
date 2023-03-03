@@ -10,7 +10,14 @@ import { useToast } from "@/lib/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
-import { BarChart, Clock, Home, Menu, SlidersHorizontal } from "lucide-react";
+import {
+  BarChart,
+  Clock,
+  Home,
+  Menu,
+  SlidersHorizontal,
+  X,
+} from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -168,6 +175,9 @@ export default function CommendPage() {
   const [selectedNFT, setSelectedNFT] = React.useState(null);
   const [selectedNFTCommends, setSelectedNFTCommends] = React.useState(null);
   const [ensOpen, setEnsOpen] = React.useState(false);
+  const [pinnedProjectHandler, setPinnedProjectHandler] = React.useState(true);
+
+  const [videoMounted, setVideoMounted] = React.useState(false);
 
   const cancelButtonRef = React.useRef(null);
   const filteredItems =
@@ -187,6 +197,8 @@ export default function CommendPage() {
 
   React.useEffect(() => {
     loadSongs();
+
+    setVideoMounted(true);
   }, []);
 
   React.useEffect(() => {
@@ -299,6 +311,11 @@ export default function CommendPage() {
             description: "Thanks for improving the community.",
           });
           setLoading(false);
+
+          // wait 1 second and reload the page
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         });
     } catch (err) {
       console.log(err);
@@ -407,41 +424,61 @@ export default function CommendPage() {
 
         <main className="flex-1">
           {/* Pinned projects */}
-          <div className="mt-6 px-4 sm:px-6 lg:px-8">
-            <h2 className="text-sm font-medium text-black dark:text-white">
-              Pinned Message
-            </h2>
-            <ul role="list" className="mt-3">
-              {pinnedProjects.map((project) => (
-                <li
-                  key={project.id}
-                  className="relative col-span-1 flex rounded-md shadow-sm"
-                >
-                  <div
-                    className={classNames(
-                      project.bgColorClass,
-                      "bg-green-500 flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white"
-                    )}
-                  >
-                    {project.initials}
-                  </div>
+          {pinnedProjectHandler && (
+            <motion.div
+              className="mt-6 px-4 sm:px-6 lg:px-8"
+              exit={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <div role="list" className="mt-3">
+                <div className="relative col-span-1 flex rounded-md shadow-sm">
+                  <div className="bg-green-500 flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white"></div>
                   <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-t border-r border-b border-gray-200 bg-white dark:bg-[#333] dark:border-[#555]">
                     <div className="flex-1 truncate px-4 py-2 text-sm">
-                      <a
-                        href="#"
-                        className="font-medium text-black dark:text-white hover:text-gray-600"
-                      >
-                        {project.title}
-                      </a>
+                      <X
+                        onClick={() => setPinnedProjectHandler(false)}
+                        className="cursor-pointer h-5 w-5 text-gray-400 text-right float-right"
+                      />
+                      <h1 className="font-medium text-black dark:text-white hover:text-gray-600">
+                        Hello! Welcome to Commend.
+                      </h1>
                       <p className="text-gray-500 dark:text-[#999]">
-                        {project.totalMembers} Members
+                        To see a quick demo of how to work around the app, click
+                        the button below! If youre reading this, I appreciate
+                        you so much.
                       </p>
+                      {/* <Button variant="outline" className="mt-2">
+                      View Demo
+                    </Button> */}
+                      {videoMounted && (
+                        <AlertDialog>
+                          <AlertDialogTrigger>
+                            <Button variant="outline" className="mt-2">
+                              View Demo
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Are you sure absolutely sure?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                https://www.youtube.com/watch?v=K_h6ESbkNd8
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
                     </div>
                   </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           {/* Projects list (only on smallest breakpoint) */}
           <div className="mt-10 sm:hidden">
@@ -632,7 +669,7 @@ export default function CommendPage() {
                                     // @ts-ignore
                                     setRoleQuery(nft.role);
                                   }}
-                                  className={`cursor-pointer inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
+                                  className={`cursor-pointer inline-flex rounded-md px-2 text-xs font-semibold leading-5 ${
                                     // @ts-ignore
                                     nft.role === "Developer"
                                       ? "bg-indigo-500 text-white"
