@@ -36,10 +36,28 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const teams = [
   { name: "Engineering", href: "#", bgColorClass: "bg-indigo-500" },
@@ -499,96 +517,148 @@ export default function CommendPage() {
           </div>
 
           {/* Projects table (small breakpoint and up) */}
-          <div className="mt-8 hidden sm:block">
-            <div className="inline-block min-w-full border-b border-gray-200 dark:border-[#555] align-middle">
-              <table className="min-w-full">
-                <thead>
-                  <tr className="border-t border-gray-200 dark:border-[#444]">
-                    <th
-                      className="border-b border-gray-200 dark:border-[#444] bg-gray-100 dark:bg-[#333] px-6 py-3 text-left text-sm font-semibold text-black dark:text-white"
-                      scope="col"
-                    >
-                      <span className="lg:pl-2">Alt Name</span>
-                    </th>
-                    <th
-                      className="border-b border-gray-200 dark:border-[#444] bg-gray-100 dark:bg-[#333] px-6 py-3 text-left text-sm font-semibold text-black dark:text-white"
-                      scope="col"
-                    >
-                      Wallet Address
-                    </th>
-                    <th
-                      className="border-b border-gray-200 dark:border-[#444] bg-gray-100 dark:bg-[#333] px-6 py-3 text-left text-sm font-semibold text-black dark:text-white"
-                      scope="col"
-                    >
-                      Role
-                    </th>
-                    <th
-                      className="hidden border-b border-gray-200 dark:border-[#444] bg-gray-100 dark:bg-[#333] px-6 py-3 text-right text-sm font-semibold text-black dark:text-white md:table-cell"
-                      scope="col"
-                    >
-                      Commends
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-[#444] bg-white dark:bg-[#111]">
-                  {/* {projects.map((project) => ( */}
-                  <AnimatePresence>
-                    {filteredItems.length
-                      ? filteredItems.map((nft, index) => (
-                          <motion.tr
-                            key={index}
-                            initial={{ opacity: 0, y: -50 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.1, delay: index * 0.1 }}
-                          >
-                            <td className="w-full max-w-0 whitespace-nowrap px-6 py-3 text-sm font-medium text-gray-900">
-                              <div className="flex items-center space-x-3 lg:pl-2">
-                                <Image
-                                  className="lg:w-16 lg:h-16 w-8 h-8 rounded-md" // @ts-ignore
-                                  src={nft.coverImage}
-                                  alt=""
-                                  width={64}
-                                  height={64}
-                                  priority
-                                />
-                                <a
-                                  href="#"
-                                  className="truncate hover:text-gray-600"
-                                >
-                                  <span className="text-black dark:text-white">
-                                    {/* @ts-ignore */}
-                                    {nft.altName}{" "}
-                                  </span>
-                                </a>
-                              </div>
-                            </td>
-                            <td className="px-6 py-3 text-sm font-medium text-gray-500">
-                              <div className="flex items-center space-x-2">
-                                <div className="flex flex-shrink-0 -space-x-1">
-                                  {/* @ts-ignore */}
-                                  {nft.walletAddress.slice(0, 5)}...
-                                  {/* @ts-ignore */}
-                                  {nft.walletAddress.slice(-5)}
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="mt-8 flow-root">
+              <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                  <table className="min-w-full divide-y divide-gray-300 dark:divide-[#777]">
+                    <thead>
+                      <tr>
+                        <th
+                          scope="col"
+                          className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-black dark:text-white sm:pl-0"
+                        >
+                          Name / Wallet Address
+                        </th>
+
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-black dark:text-white"
+                        >
+                          Role
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-black dark:text-white"
+                        >
+                          Reviews
+                        </th>
+                        <th
+                          scope="col"
+                          className="relative py-3.5 pl-3 pr-4 sm:pr-0"
+                        >
+                          <span className="sr-only">Edit</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 dark:divide-[#555] bg-white dark:bg-[#111]">
+                      {filteredItems.length
+                        ? filteredItems.map((nft, index) => (
+                            <tr key={index}>
+                              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-0">
+                                <div className="flex items-center">
+                                  <div className="h-10 w-10 flex-shrink-0">
+                                    <Image
+                                      className="h-10 w-10 rounded-md"
+                                      // @ts-ignore
+                                      src={nft.coverImage}
+                                      alt=""
+                                      width={40}
+                                      height={40}
+                                    />
+                                  </div>
+                                  <div className="ml-4">
+                                    <div className="font-medium text-black dark:text-white">
+                                      {/* @ts-ignore */}
+                                      {nft.altName}
+                                    </div>
+                                    <div className="text-black dark:text-white">
+                                      {/* @ts-ignore */}
+                                      {nft.walletAddress}
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </td>
-                            <td className="hidden whitespace-nowrap px-6 py-3 text-right text-sm text-gray-500 md:table-cell">
-                              {/* @ts-ignore */}
-                              {nft.role}
-                            </td>
-                            <td className="whitespace-nowrap px-6 py-3 text-right text-sm font-medium">
-                              <div className="space-x-2 flex">
-                                <Button variant="outline" size="sm">
+                              </td>
+
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                                   {/* @ts-ignore */}
-                                  {nft.commendCount} Reviews
-                                </Button>
+                                  {nft.role}
+                                </span>
+                              </td>
+
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                {/*  */}
+                                <AlertDialog>
+                                  <AlertDialogTrigger>
+                                    <Button variant="outline" size="sm">
+                                      {/* @ts-ignore */}
+                                      {nft.commendCount} Reviews
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>
+                                        Are you sure absolutely sure?
+                                      </AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        <ScrollArea className="h-[400px] rounded-md">
+                                          {/* @ts-ignore */}
+                                          {nft.description.map(
+                                            (desc: any, index: any) => (
+                                              <React.Fragment key={index}>
+                                                <div className="w-full bg-gray-100 dark:bg-[#555] transition duration-2 hover:bg-gray-200 dark:hover:bg-[#555]/80 rounded-lg p-2">
+                                                  <p className="text-xs text-gray-500 dark:text-white">
+                                                    {/* {
+                                                        nft.commendAddress[
+                                                          index
+                                                        ]
+                                                      } */}
+                                                    {/* slice the commendaddress */}
+                                                    From: {/* @ts-ignore */}
+                                                    {nft.commendAddress[
+                                                      index
+                                                    ].slice(0, 5) +
+                                                      "..." +
+                                                      // @ts-ignore
+                                                      nft.commendAddress[
+                                                        index
+                                                      ].slice(-4)}
+                                                  </p>
+                                                  <p className="text-sm text-black dark:text-white">
+                                                    {desc}
+                                                  </p>
+                                                </div>
+                                                {index <
+                                                  // @ts-ignore
+                                                  nft.description.length -
+                                                    1 && <br />}
+                                              </React.Fragment>
+                                            )
+                                          )}
+                                        </ScrollArea>
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>
+                                        Cancel
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction>
+                                        Continue
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </td>
+
+                              <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                                 {/* <Button variant="default" size="sm">
-                                  Give Commend
+                                  Commend
                                 </Button> */}
                                 <Dialog>
                                   <DialogTrigger asChild>
                                     <Button variant="default" size="sm">
-                                      Give Commend
+                                      Commend
                                     </Button>
                                   </DialogTrigger>
                                   <DialogContent className="sm:max-w-[425px]">
@@ -639,51 +709,51 @@ export default function CommendPage() {
                                     </DialogFooter>
                                   </DialogContent>
                                 </Dialog>
-                              </div>
-                            </td>
-                          </motion.tr>
-                        ))
-                      : [...Array(3)].map((_, index) => (
-                          <motion.tr
-                            key={index}
-                            initial={{ opacity: 0, y: -50 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.1, delay: index * 0.1 }}
-                          >
-                            <td className="w-full max-w-0 whitespace-nowrap px-6 py-3 text-sm font-medium text-gray-900">
-                              <div className="flex items-center space-x-3 lg:pl-2">
-                                <div className="bg-gray-200 dark:bg-[#333] w-16 h-16 animate-pulse rounded-md"></div>
-                                <a
-                                  href="#"
-                                  className="truncate hover:text-gray-600"
-                                >
-                                  <span className="text-black dark:text-white">
-                                    <div className="bg-gray-200 dark:bg-[#333] w-20 h-8 animate-pulse rounded-md"></div>
-                                  </span>
-                                </a>
-                              </div>
-                            </td>
-                            <td className="px-6 py-3 text-sm font-medium text-gray-500">
-                              <div className="flex items-center space-x-2">
-                                <div className="flex flex-shrink-0 -space-x-1">
-                                  <div className="bg-gray-200 dark:bg-[#333] w-64 h-8 animate-pulse rounded-md"></div>
+                              </td>
+                            </tr>
+                          ))
+                        : [...Array(3)].map((_, index) => (
+                            <motion.tr
+                              key={index}
+                              initial={{ opacity: 0, y: -50 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ duration: 0.1, delay: index * 0.1 }}
+                            >
+                              <td className="w-full max-w-0 whitespace-nowrap px-6 py-3 text-sm font-medium text-gray-900">
+                                <div className="flex items-center space-x-3 lg:pl-2">
+                                  <div className="bg-gray-200 dark:bg-[#333] w-16 h-16 animate-pulse rounded-md"></div>
+                                  <a
+                                    href="#"
+                                    className="truncate hover:text-gray-600"
+                                  >
+                                    <span className="text-black dark:text-white">
+                                      <div className="bg-gray-200 dark:bg-[#333] w-20 h-8 animate-pulse rounded-md"></div>
+                                    </span>
+                                  </a>
                                 </div>
-                              </div>
-                            </td>
-                            <td className="hidden whitespace-nowrap px-6 py-3 text-right text-sm text-gray-500 md:table-cell">
-                              <div className="bg-gray-200 dark:bg-[#333] w-20 h-8 animate-pulse rounded-md"></div>
-                            </td>
-                            <td className="whitespace-nowrap px-6 py-3 text-right text-sm font-medium">
-                              <div className="space-x-2 flex">
+                              </td>
+                              <td className="px-6 py-3 text-sm font-medium text-gray-500">
+                                <div className="flex items-center space-x-2">
+                                  <div className="flex flex-shrink-0 -space-x-1">
+                                    <div className="bg-gray-200 dark:bg-[#333] w-64 h-8 animate-pulse rounded-md"></div>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="hidden whitespace-nowrap px-6 py-3 text-right text-sm text-gray-500 md:table-cell">
                                 <div className="bg-gray-200 dark:bg-[#333] w-20 h-8 animate-pulse rounded-md"></div>
-                                <div className="bg-gray-200 dark:bg-[#333] w-20 h-8 animate-pulse rounded-md"></div>
-                              </div>
-                            </td>
-                          </motion.tr>
-                        ))}
-                  </AnimatePresence>
-                </tbody>
-              </table>
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-3 text-right text-sm font-medium">
+                                <div className="space-x-2 flex">
+                                  <div className="bg-gray-200 dark:bg-[#333] w-20 h-8 animate-pulse rounded-md"></div>
+                                  <div className="bg-gray-200 dark:bg-[#333] w-20 h-8 animate-pulse rounded-md"></div>
+                                </div>
+                              </td>
+                            </motion.tr>
+                          ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </main>
