@@ -27,15 +27,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
-const navigation = [
-  { name: "Home", href: "#", icon: Home, current: true },
-  { name: "My tasks", href: "#", icon: BarChart, current: false },
-  { name: "Recent", href: "#", icon: Clock, current: false },
-];
 const teams = [
   { name: "Engineering", href: "#", bgColorClass: "bg-indigo-500" },
   { name: "Human Resources", href: "#", bgColorClass: "bg-green-500" },
@@ -150,7 +155,9 @@ export default function CommendPage() {
             // @ts-ignore
             item.walletAddress.toLowerCase().includes(query.toLowerCase()) ||
             // @ts-ignore
-            item.role.toLowerCase().includes(query.toLowerCase())
+            item.role.toLowerCase().includes(query.toLowerCase()) ||
+            // @ts-ignore
+            item.altName.toLowerCase().includes(query.toLowerCase())
         );
 
   const { toast } = useToast();
@@ -236,7 +243,7 @@ export default function CommendPage() {
     setNfts(sortedNfts);
   }
 
-  async function handleGiveHeat(nfts: any) {
+  async function handleGiveHeat(nft: any) {
     // Get an instance of the Radio contract
     toast({
       title: "Giving Commend...",
@@ -255,7 +262,7 @@ export default function CommendPage() {
       );
 
       radioContract.methods
-        .giveCommend(nfts.tokenId, 1, commendDescription, commendAddress)
+        .giveCommend(nft.tokenId, 1, commendDescription, commendAddress)
         .send({
           // @ts-ignore
           from: window.ethereum.selectedAddress,
@@ -294,7 +301,11 @@ export default function CommendPage() {
                   placeholder="Search"
                   className="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 /> */}
-                <Input className="w-full" placeholder="Quick Search" />
+                <Input
+                  onChange={(e) => setQuery(e.target.value)}
+                  className="w-full"
+                  placeholder="Quick Search"
+                />
                 <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
                   <kbd className="inline-flex items-center rounded border border-gray-200 dark:border-[#555] px-1 font-sans text-xs text-gray-400 dark:text-[#777]">
                     ⌘K
@@ -532,10 +543,6 @@ export default function CommendPage() {
                           >
                             <td className="w-full max-w-0 whitespace-nowrap px-6 py-3 text-sm font-medium text-gray-900">
                               <div className="flex items-center space-x-3 lg:pl-2">
-                                {/* <div
-                                  className="bg-green-500 h-2.5 w-2.5 flex-shrink-0 rounded-full"
-                                  aria-hidden="true"
-                                /> */}
                                 <Image
                                   className="lg:w-16 lg:h-16 w-8 h-8 rounded-md" // @ts-ignore
                                   src={nft.coverImage}
@@ -559,7 +566,9 @@ export default function CommendPage() {
                               <div className="flex items-center space-x-2">
                                 <div className="flex flex-shrink-0 -space-x-1">
                                   {/* @ts-ignore */}
-                                  {nft.walletAddress}
+                                  {nft.walletAddress.slice(0, 5)}...
+                                  {/* @ts-ignore */}
+                                  {nft.walletAddress.slice(-5)}
                                 </div>
                               </div>
                             </td>
@@ -570,11 +579,66 @@ export default function CommendPage() {
                             <td className="whitespace-nowrap px-6 py-3 text-right text-sm font-medium">
                               <div className="space-x-2 flex">
                                 <Button variant="outline" size="sm">
-                                  Reviews
+                                  {/* @ts-ignore */}
+                                  {nft.commendCount} Reviews
                                 </Button>
-                                <Button variant="default" size="sm">
+                                {/* <Button variant="default" size="sm">
                                   Give Commend
-                                </Button>
+                                </Button> */}
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button variant="default" size="sm">
+                                      Give Commend
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                      <DialogTitle>
+                                        {" "}
+                                        {/* @ts-ignore */}
+                                        Give Commend to {nft.altName}
+                                      </DialogTitle>
+                                      <DialogDescription>
+                                        Give a commend to this person for their
+                                        work in the community.
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <Label htmlFor="email-2">
+                                      Confirm Your Wallet Address
+                                    </Label>
+                                    <Input
+                                      type="text"
+                                      id="email-2"
+                                      placeholder="0x..."
+                                      onChange={(e) => {
+                                        setCommendAddress(e.target.value);
+                                      }}
+                                    />
+
+                                    <Label htmlFor="username">
+                                      Write Your Commend
+                                    </Label>
+                                    <Textarea
+                                      className=""
+                                      onChange={(event) =>
+                                        setCommendDescription(
+                                          event.target.value
+                                        )
+                                      }
+                                      placeholder="Type your message here. It should be a brief description of how this person has helped you or the community."
+                                    />
+                                    <DialogFooter>
+                                      <Button
+                                        onClick={() => {
+                                          handleGiveHeat(nft);
+                                        }}
+                                        type="submit"
+                                      >
+                                        Give Commend
+                                      </Button>
+                                    </DialogFooter>
+                                  </DialogContent>
+                                </Dialog>
                               </div>
                             </td>
                           </motion.tr>
